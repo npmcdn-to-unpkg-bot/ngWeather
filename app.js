@@ -1,9 +1,4 @@
 var weatherApp = angular.module('weatherApp', ['ngRoute', 'ngResource']);
-
-var appId = '5e71e418095fadfc44b618de6b2eccec';
-var url = 'http://api.openweathermap.org/data/2.5/forecast/daily';
-var api = url + appId;
-
 weatherApp.config(function($routeProvider){
     $routeProvider.
         when('/', {
@@ -31,21 +26,24 @@ weatherApp.controller('homeController', ['$scope', 'cityNameService', function($
     });
 }]);
 
-weatherApp.controller('forecastController', ['$scope', '$resource','cityNameService', '$filter', '$routeParams', function($scope, $resource, cityNameService, $filter, $routeParams){
+weatherApp.controller('forecastController', ['$scope', '$resource','cityNameService', '$filter', '$routeParams', '$location', function($scope, $resource, cityNameService, $filter, $routeParams, $location){
     var appId = '5e71e418095fadfc44b618de6b2eccec';
+    //var appId = '5e71e418095fadfc44b618de6b2eccec';
     $scope.cityName = cityNameService.city;
     $scope.days = $routeParams.days || 2;
     $scope.weatherAPI = $resource('http://api.openweathermap.org/data/2.5/forecast/daily', {
         callback: "JSON_CALLBACK" }, {get: {method: "JSONP"}});
     $scope.weatherResult = $scope.weatherAPI.get({q: $scope.cityName, cnt: $scope.days, APPID: appId});
-    console.log($scope.weatherResult);
     $scope.convertToFarenheight = function(degK) {
         return Math.round((1.8 * (degK - 273)) + 32);
     };
     $scope.convertToDate = function(dateInMs) {
-
         var dt = new Date(dateInMs*1000);
         return $filter('date')(dt, 'fullDate');
+    };
+    $scope.submit = function() {
+        debugger;
+        $location.path('/forecast');        
     };
 }]);
 

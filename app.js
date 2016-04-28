@@ -43,6 +43,7 @@ weatherApp.controller('forecastController', ['$scope', '$resource','cityNameServ
         return Math.round((1.8 * (degK - 273)) + 32);
     };
     $scope.convertToDate = function(dateInMs) {
+
         var dt = new Date(dateInMs*1000);
         return $filter('date')(dt, 'fullDate');
     };
